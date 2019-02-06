@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainMenuController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="openImage" mnemonicParsing="false" onAction="#openImage" text="Open Image" />
+              <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#quitProgram" text="Quit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Image">
+            <items>
+              <MenuItem mnemonicParsing="false" text="TODO" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <ImageView fx:id="imagePanel" fitHeight="450.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+   </center>
+   <right>
+      <VBox prefHeight="575.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="showOriginalImage" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="123.0" mnemonicParsing="false" onAction="#showOriginalImage" prefHeight="25.0" prefWidth="242.0" text="Show Original Image" />
+            <Separator prefHeight="35.0" prefWidth="240.0" />
+            <Label alignment="CENTER" layoutX="10.0" layoutY="45.0" prefHeight="20.0" prefWidth="240.0" text="Colour Threshold" underline="true" />
+            <Slider fx:id="blackWhiteThreshold" max="255.0" showTickLabels="true" showTickMarks="true" value="128.0" />
+            <Button fx:id="toBlackWhite" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#toBlackWhite" prefHeight="25.0" prefWidth="242.0" text="Show Black/White Image" />
+            <Separator layoutX="30.0" layoutY="55.0" prefHeight="35.0" prefWidth="240.0" />
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" top="20.0" />
+         </padding></VBox>
+   </right>
+</BorderPane>

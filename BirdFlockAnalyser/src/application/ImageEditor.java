@@ -120,6 +120,15 @@ public abstract class ImageEditor {
 		return processedImage;
 	}
 	
+	public static boolean pixelIsBlack(Image image, int x, int y) {
+		
+		PixelReader pr = image.getPixelReader();
+		Color pixelColor = pr.getColor(x,y);
+		return (pixelColor.getRed() == 0 &&
+				pixelColor.getGreen() == 0 &&
+				pixelColor.getBlue() == 0);
+	}
+	
 	/**
 	 * Determines if an image has been loaded into the system.
 	 * @return True if an image exists, false otherwise.

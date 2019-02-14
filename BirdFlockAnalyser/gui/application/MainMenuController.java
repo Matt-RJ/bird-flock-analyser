@@ -27,6 +27,9 @@ public class MainMenuController {
 	@FXML private Button toBlackWhite;
 	
 	
+	
+	// IMAGE LOADING AND MANIPULATION
+	
 	@FXML
 	/**
 	 * Opens a file browser and loads in a chosen image into the program
@@ -61,6 +64,18 @@ public class MainMenuController {
 		ImageEditor.setBlackWhiteImage(blackWhiteImage);
 		imagePanel.setImage(blackWhiteImage);
 	}
+	
+	
+	
+	// BIRD SCANNING
+	
+	@FXML
+	public void locateBirds(ActionEvent event) {
+		
+	}
+	
+	
+	// MISC
 	
 	@FXML
 	public void quitProgram(ActionEvent event) {

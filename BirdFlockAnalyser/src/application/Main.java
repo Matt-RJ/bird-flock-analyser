@@ -9,6 +9,9 @@ import javafx.scene.Scene;
 // TODO: Link MainMenu to its controller properly
 
 public class Main extends Application {
+	
+	BirdAnalyser birdAnalyser = new BirdAnalyser(null);
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {

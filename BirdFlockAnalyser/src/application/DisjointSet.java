@@ -51,7 +51,7 @@ public class DisjointSet {
 	 * @param id - The ID to look for.
 	 * @return The ID (index) of a node's root in sets.
 	 */
-	public int findIterative(int[] sets, int id) {
+	public static int findIterative(int[] sets, int id) {
 		while (!isRoot(sets, id)) id = sets[id];
 		return id;
 	}
@@ -62,7 +62,7 @@ public class DisjointSet {
 	 * @param id - The ID to look for.
 	 * @return The ID (index) of a node's root in sets.
 	 */
-	public int findRecursive(int[] sets, int id) {
+	public static int findRecursive(int[] sets, int id) {
 		return isRoot(sets,id) ? id : findRecursive(sets,sets[id]);
 	}
 	
@@ -72,7 +72,7 @@ public class DisjointSet {
 	 * @param id - The ID of the node.
 	 * @return True if the node is a root, false otherwise.
 	 */
-	public boolean isRoot(int[] sets, int id) {
+	public static boolean isRoot(int[] sets, int id) {
 		return sets[id] < 0;
 	}
 	
@@ -83,7 +83,7 @@ public class DisjointSet {
 	 * @return The number of nodes in a tree. Returns -1 if
 	 * the node is not a root.
 	 */
-	public int getSize(int[] sets, int id) {
+	public static int getSize(int[] sets, int id) {
 		
 		// Returns -1 if the node is not a root
 		if (!isRoot(sets,id)) return -1;
@@ -103,8 +103,10 @@ public class DisjointSet {
 	 * @throws IllegalArgumentException if the size is negative or above 4095.
 	 * @throws IllegalArgumentException if sets[id] contains a non-root node.
 	 */
-	public void setSize(int[] sets, int id, int size)
+	public static void setSize(int[] sets, int id, int size)
 			throws IllegalArgumentException {
+		
+		// TODO: MAKE THIS THE HEIGHT
 		
 		if (size < 0 || size > 4095) throw new 
 		IllegalArgumentException("Invalid size " + size + ". Size must be between 0 and 4095.");
@@ -126,7 +128,7 @@ public class DisjointSet {
 	 * @return The height of the tree, determined by its
 	 * longest branch. Returns -1 if the node is not a root.
 	 */
-	public int getHeight(int[] sets, int id) {
+	public static int getHeight(int[] sets, int id) {
 		
 		// Returns -1 if the node is not a root
 		if (!isRoot(sets,id)) return -1;
@@ -143,29 +145,73 @@ public class DisjointSet {
 	 * @param height - The new height of the tree, between 0 and 524287.
 	 * @throws IllegalArgumentException
 	 */
-	public void setHeight(int[] sets, int id, int height)
+	public static void setHeight(int[] sets, int id, int height)
 			throws IllegalArgumentException {
 		
 		if (height < 0 || height > 524287) throw new 
-		IllegalArgumentException("Invalid height " + height + ". The maximum height is 524287");
+		IllegalArgumentException("Invalid height " + height + ". Height must be between 0"
+				+ " and 524287.");
 		
 		if (!isRoot(sets,id)) throw new IllegalArgumentException(
 				"The element with id: " + id + "is not a root.");
 		
-		// TODO: Add method body
+		// TODO: Fix this method
 		int temp = sets[id];
 		
 		// Clears the current height
-		temp &= 0x80000FFF;
+		temp &= 0xFFFFF000;
 		
 		// Adds new height to root node
 		sets[id] = temp |= (new Integer(height << 12));
+		
+		System.out.println("done");
 		
 		
 	}
 	
 	// TODO: Add union methods
 	
+	/**
+	 * Merges two disjoint set trees by their height. The
+	 * tree with the bigger height is used as the merged root.
+	 * @param sets
+	 * @param p
+	 * @param q
+	 */
+	public static void unionByHeight(int[] sets, int p, int q) {
+		
+		int rootP = findRecursive(sets, p);
+		int rootQ = findRecursive(sets, q);
+		
+		int pTreeHeight = getHeight(sets, rootP);
+		int qTreeHeight = getHeight(sets, rootQ);
+		
+		int deeperRoot = (pTreeHeight > qTreeHeight) ? rootP : rootQ;
+		int deeperRootIndex = (deeperRoot == rootP) ? p : q;
+		int shallowerRoot = (deeperRoot == rootP) ? rootQ : rootP;
+		
+		// The height of the new tree
+		int newHeight = (pTreeHeight == qTreeHeight) 
+				? pTreeHeight + 1 : getHeight(sets, deeperRoot);
+		
+		sets[shallowerRoot] = deeperRootIndex;
+		setSize(sets, deeperRootIndex, newHeight);
+		
+	}
 	
+	public static void unionBySize(int[] sets, int p, int q) {
+		
+		int rootP = findRecursive(sets, p);
+		int rootQ = findRecursive(sets, q);
+		
+		int pTreeSize = getSize(sets, rootP);
+		int qTreeSize = getSize(sets, rootQ);
+		int totalSize = pTreeSize + qTreeSize; // The size of the new tree
+		
+		int smallerRoot = (pTreeSize < qTreeSize) ? rootP : rootQ;
+		int largerRoot = (smallerRoot == rootP) ? rootQ : rootP;
+		
+		int temp = sets[smallerRoot];
+	}
 	
 }

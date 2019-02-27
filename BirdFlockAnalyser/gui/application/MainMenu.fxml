@@ -42,6 +42,7 @@
             <Slider fx:id="blackWhiteThreshold" max="255.0" showTickLabels="true" showTickMarks="true" value="128.0" />
             <Button fx:id="toBlackWhite" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#toBlackWhite" prefHeight="25.0" prefWidth="242.0" text="Show Black/White Image" />
             <Separator layoutX="30.0" layoutY="55.0" prefHeight="35.0" prefWidth="240.0" />
+            <Button fx:id="createSetsArray" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#createSetsArray" prefHeight="25.0" prefWidth="242.0" text="Generate Sets for each Black Pixel" />
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />

@@ -120,6 +120,13 @@ public abstract class ImageEditor {
 		return processedImage;
 	}
 	
+	/**
+	 * Determines if a pixel in an Image object is black (R,G,B = 0)
+	 * @param image - The JavaFX image where the pixel is.
+	 * @param x - X coordinate.
+	 * @param y - Y coordinate.
+	 * @return True if the pixel is 100% black, false otherwise.
+	 */
 	public static boolean pixelIsBlack(Image image, int x, int y) {
 		
 		PixelReader pr = image.getPixelReader();

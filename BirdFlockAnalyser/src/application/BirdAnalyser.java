@@ -1,7 +1,6 @@
 package application;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 
 /**
  * This class contains the methods which allow the DisjointSet class to
@@ -39,19 +38,48 @@ public class BirdAnalyser {
 	/**
 	 * Instantiates an array of disjoint set nodes based on
 	 * a black and white image's pixels and dimensions.
+	 * 
 	 * @param image - The javaFX image to base the array on.
 	 */
 	public void instantiateDisjointSetArray(Image image) {
 		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
 		dset = new DisjointSet(pixelsInImage);
 		
-		PixelReader pr = image.getPixelReader();
+		// TODO: Test with setsMade and remove
+		int setsMade = 0;
 		for (int i = 0; i < pixelsInImage; i++) {
-			if (ImageEditor.pixelIsBlack(image, x, y)) {
-				setNode(x,y,SINGLETON);
+			int[] coords = getCoordinates(i);
+			if (ImageEditor.pixelIsBlack(image, coords[0], coords[1])) {
+				// Black pixels - Single nodes for each
+				setNode(coords[0],coords[1],SINGLETON);
+				setsMade++;
+			}
+			else {
+				// White pixels
+				setNode(coords[0],coords[1],0);
 			}
 		}
 		
+		System.out.println(setsMade + " sets have been created, 1 for each black pixel.");
+		
+		for (int i = 0; i < pixelsInImage; i++) {
+			System.out.println("Index: " + i + "   Value: " + dset.getSets()[i]);
+		}
+	}
+	
+	/**
+	 * Finds a particular disjoint set node's coordinates in the image.
+	 * 
+	 * @return A 2D array, where array[0] = node's X, array[1] = node's Y
+	 * in the image.
+	 */
+	public int[] getCoordinates(int index) throws NullPointerException {
+		int[] coords = new int[2];
+		
+		coords[0] = (int) (index % image.getWidth());
+		coords[1] = (int) (index / image.getWidth());
+		
+		return coords;
 	}
 	
 	/**

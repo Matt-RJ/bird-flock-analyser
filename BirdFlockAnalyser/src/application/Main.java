@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 
 public class Main extends Application {
 	
-	BirdAnalyser birdAnalyser = new BirdAnalyser(null);
+	static BirdAnalyser birdAnalyser = new BirdAnalyser(null);
 	
 	@Override
 	public void start(Stage primaryStage) {

@@ -26,13 +26,16 @@ public class MainMenuController {
 	@FXML private Slider blackWhiteThreshold;
 	@FXML private Button toBlackWhite;
 	
+	// Disjoint set operations
+	@FXML private Button createSetsArray;
 	
 	
 	// IMAGE LOADING AND MANIPULATION
 	
 	@FXML
 	/**
-	 * Opens a file browser and loads in a chosen image into the program
+	 * Opens a file browser and loads in a chosen image into the program.
+	 * Creates an instance of BirdAnalyser based on this image.
 	 * @param event
 	 */
 	public void openImage(ActionEvent event) {
@@ -45,8 +48,11 @@ public class MainMenuController {
 		ImageEditor.setLoadedImageFile(imageFile);
 		ImageEditor.setLoadedImage(new Image(imageFile.toURI().toString()));
 		ImageEditor.setGrayScaleImage(null);
-		ImageEditor.setBlackWhiteImage(null);
+		toBlackWhite();
 		imagePanel.setImage(ImageEditor.getLoadedImage());
+		
+		// Creates an instance of BirdAnalyser for the loaded image
+		Main.birdAnalyser = new BirdAnalyser(ImageEditor.getBlackWhiteImage());
 	}
 	
 	@FXML
@@ -65,9 +71,22 @@ public class MainMenuController {
 		imagePanel.setImage(blackWhiteImage);
 	}
 	
+	public void toBlackWhite() {
+		int threshold = (int) blackWhiteThreshold.getValue();
+		Image image = ImageEditor.getLoadedImage();
+		Image blackWhiteImage = ImageEditor.toBlackAndWhite(image, threshold);
+		ImageEditor.setBlackWhiteImage(blackWhiteImage);
+		imagePanel.setImage(blackWhiteImage);
+	}
+	
 	
 	
 	// BIRD SCANNING
+	
+	@FXML
+	public void createSetsArray(ActionEvent event) {
+		Main.birdAnalyser.instantiateDisjointSetArray(ImageEditor.getBlackWhiteImage());
+	}
 	
 	@FXML
 	public void locateBirds(ActionEvent event) {

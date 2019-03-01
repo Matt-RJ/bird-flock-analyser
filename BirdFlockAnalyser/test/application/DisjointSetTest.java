@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,51 +42,98 @@ public class DisjointSetTest {
 		DisjointSet.setSize(sets, 14, 4);
 		
 		DisjointSet.setHeight(sets, 4, 3);
-		DisjointSet.setSize(sets, 14, 3);
+		DisjointSet.setSize(sets, 4, 3);
 		
 		DisjointSet.setHeight(sets, 1, 4);
 		DisjointSet.setSize(sets, 1, 5);
 	}
 	
-	@Test
-	public void getSizeTest() {
-		int size = DisjointSet.getSize(sets, 5);
-		assertEquals(5, size);
+	@AfterEach
+	public void reset() {
+		
 	}
 	
+	
 	@Test
-	public void setSizeTest() {
+	public void getSizeReturnsTreeSizeWithRootNodes() {
+		
+		assertEquals(3, DisjointSet.getSize(sets, 5));
+		assertEquals(4, DisjointSet.getSize(sets, 14));
+		assertEquals(3, DisjointSet.getSize(sets, 4));
+		assertEquals(5, DisjointSet.getSize(sets, 1));
 		
 	}
 	
 	@Test
-	public void getHeightTest() {
-		// TODO: Fix this
-		int height = DisjointSet.getHeight(sets, 5);
-		assertEquals(2, height);
-	}
-	
-	@Test
-	public void setHeightTest() {
+	public void getSizeReturnsMinusOneWithNonRootNodes() {
+		
+		assertEquals(-1, DisjointSet.getSize(sets, 7));
+		assertEquals(-1, DisjointSet.getSize(sets, 6));
+		assertEquals(-1, DisjointSet.getSize(sets, 9));
+		assertEquals(-1, DisjointSet.getSize(sets, 0));
+		assertEquals(-1, DisjointSet.getSize(sets, 3));
+		assertEquals(-1, DisjointSet.getSize(sets, 13));
+		assertEquals(-1, DisjointSet.getSize(sets, 11));
+		assertEquals(-1, DisjointSet.getSize(sets, 8));
+		assertEquals(-1, DisjointSet.getSize(sets, 10));
+		assertEquals(-1, DisjointSet.getSize(sets, 2));
+		assertEquals(-1, DisjointSet.getSize(sets, 12));
 		
 	}
 	
 	@Test
-	public void mergeByHeightMergesRootsCorrectly() {
+	public void getHeightReturnsTreeHeightWithRootNodes() {
+		
+		assertEquals(2, DisjointSet.getHeight(sets, 5));
+		assertEquals(2, DisjointSet.getHeight(sets, 5));
+		assertEquals(2, DisjointSet.getHeight(sets, 5));
+		assertEquals(2, DisjointSet.getHeight(sets, 5));
+		
+	}
+	
+	@Test
+	public void getHeightReturnsMinusOneWithNonRootNodes() {
+		
+		assertEquals(-1, DisjointSet.getHeight(sets, 7));
+		assertEquals(-1, DisjointSet.getHeight(sets, 6));
+		assertEquals(-1, DisjointSet.getHeight(sets, 9));
+		assertEquals(-1, DisjointSet.getHeight(sets, 0));
+		assertEquals(-1, DisjointSet.getHeight(sets, 3));
+		assertEquals(-1, DisjointSet.getHeight(sets, 13));
+		assertEquals(-1, DisjointSet.getHeight(sets, 11));
+		assertEquals(-1, DisjointSet.getHeight(sets, 8));
+		assertEquals(-1, DisjointSet.getHeight(sets, 10));
+		assertEquals(-1, DisjointSet.getHeight(sets, 2));
+		assertEquals(-1, DisjointSet.getHeight(sets, 12));
+		
+	}
+	
+	// Union by height - Different height trees
+	
+	@Test
+	public void unionByHeightMergesRootsCorrectlyWithDifferentHeightTrees() {
 		DisjointSet.unionByHeight(sets, 6, 14);
 		assertTrue(sets[5] == 14);
 	}
 	
 	@Test
-	public void mergeByHeightGetsCorrectNewHeight() {
+	public void unionByHeightGetsCorrectNewHeightWithDifferentHeightTrees() {
 		DisjointSet.unionByHeight(sets, 6, 14);
 		assertTrue(DisjointSet.getHeight(sets, 14) == 3);
 	}
 	
 	@Test
-	public void mergeByHeightGetsCorrectNewSize() {
-		DisjointSet.unionByHeight(sets, 6, 14);
+	public void unionByHeightGetsCorrectNewSizeWithDifferentHeightTrees() {
+		DisjointSet.unionByHeight(sets, 5, 14);
 		assertTrue(DisjointSet.getSize(sets, 14) == 7);
+	}
+	
+	// Union by height - Same size trees
+	
+	@Test
+	public void unionByHeightMergesRootsCorrectlyWithSameSizeTrees() {
+		//DisjointSet.unionByHeight(sets, 7, 14);
+		//assertTrue(sets[5] == 4);
 	}
 	
 }

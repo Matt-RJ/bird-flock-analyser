@@ -18,7 +18,6 @@ public class DisjointSet {
 	 * <br>- Starting on the 2nd bit from the left, the next 19 bits contain
 	 * the size of the tree.
 	 * <br>- The last 12 bits contain the height of the tree.
-	 * 110011
 	 * <br>- Example: 100000000 00000011 00110000 00001010 is a root node with
 	 * a size of 51 and a height of 10
 	 * 
@@ -122,7 +121,8 @@ public class DisjointSet {
 	}
 	
 	/**
-	 * Sets the size of a disjoint set tree.
+	 * Sets the size of a disjoint set tree, as displayed
+	 * in the tree's root node.
 	 * 
 	 * @param sets - The array of disjoint set nodes.
 	 * @param id - The ID of the root node of the tree.
@@ -138,7 +138,7 @@ public class DisjointSet {
 							   + ". Height must be between 0 and 4095.");
 		
 		if (!isRoot(sets,id)) throw new IllegalArgumentException(
-				"The element with id: " + id + "is not a root.");
+				"The element with id " + id + " is not a root.");
 		
 		sets[id] = (sets[id] & 0xFFFFF000) | height;
 		
@@ -150,18 +150,24 @@ public class DisjointSet {
 	 * Merges two disjoint set trees by their height. The
 	 * root of the shorter tree becomes a child or the root of
 	 * the taller tree. If the trees are of equal height, then
-	 * q is treated as the taller tree (arbitrarily).
-	 * @param sets
-	 * @param p
-	 * @param q
+	 * q is treated as the taller tree (arbitrarily). If p and q
+	 * are in the same tree, then nothing happens.
+	 * 
+	 * @param sets - The array of disjoint set nodes.
+	 * @param p - A node in one tree.
+	 * @param q - A node in another tree.
 	 */
 	public static void unionByHeight(int[] sets, int p, int q) {
 		
-		// Gets both nodes and determines which one will be the root
 		int rootP = findRecursive(sets, p);
 		int rootQ = findRecursive(sets, q);
+		
+		if (rootP == rootQ) return; // Does nothing if both nodes are in the same tree.
+		
 		int pTreeHeight = getHeight(sets, rootP);
 		int qTreeHeight = getHeight(sets, rootQ);
+		
+		// Gets both nodes and determines which one will be the root
 		
 		int deeperRoot = (pTreeHeight > qTreeHeight) ? rootP : rootQ;
 		int deeperRootIndex = (deeperRoot == rootP) ? p : q;
@@ -177,26 +183,53 @@ public class DisjointSet {
 		sets[shallowerRoot] = deeperRootIndex;
 		
 		// Updates the new tree's height and size
-		setHeight(sets, deeperRootIndex, newHeight);
-		setSize(sets, deeperRootIndex, newSize);
+		setHeight(sets, deeperRoot, newHeight);
+		setSize(sets, deeperRoot, newSize);
 		
 	}
 	
+	/**
+	 * Merges two disjoint set trees by their sizes. The
+	 * root of the tree with the smaller size becomes a child
+	 * of the root of the bigger tree's root node.
+	 * 
+	 * If the trees are of equal size, then q is treated as the
+	 * bigger tree (arbitrarily). If p and q are in the same tree,
+	 * then nothing happens.
+	 * @param sets
+	 * @param p - A node in one tree.
+	 * @param q - A node in another tree.
+	 */
 	public static void unionBySize(int[] sets, int p, int q) {
-		
-		// TODO
 		
 		int rootP = findRecursive(sets, p);
 		int rootQ = findRecursive(sets, q);
 		
+		if (rootP == rootQ) return; // Does nothing if both nodes are in the same tree.
+		
 		int pTreeSize = getSize(sets, rootP);
 		int qTreeSize = getSize(sets, rootQ);
-		int totalSize = pTreeSize + qTreeSize; // The size of the new tree
 		
-		int smallerRoot = (pTreeSize < qTreeSize) ? rootP : rootQ;
-		int largerRoot = (smallerRoot == rootP) ? rootQ : rootP;
+		// Gets both nodes and determines which one will be the root
+		int biggerRoot = (pTreeSize > qTreeSize) ? rootP : rootQ;
+		int biggerRootIndex = (biggerRoot == rootP) ? p : q;
+		int smallerRoot = (biggerRoot == rootP) ? rootQ : rootP;
 		
-		int temp = sets[smallerRoot];
+		// The height and size of the new tree
+		int pTreeHeight = getHeight(sets, rootP);
+		int qTreeHeight = getHeight(sets, rootQ);
+		int deeperRoot = (pTreeHeight > qTreeHeight) ? rootP : rootQ;
+		int newHeight = (pTreeHeight == qTreeHeight) ?
+				pTreeHeight + 1 : getHeight(sets, deeperRoot);
+		
+		int newSize = pTreeSize + qTreeSize;
+		
+		// Joins the two nodes
+		sets[smallerRoot] = biggerRootIndex;
+		
+		// Updates the new tree's height and size
+		setHeight(sets, biggerRoot, newHeight);
+		setSize(sets, biggerRoot, newSize);
 	}
 	
 }

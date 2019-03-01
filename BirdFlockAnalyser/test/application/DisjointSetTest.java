@@ -128,12 +128,91 @@ public class DisjointSetTest {
 		assertTrue(DisjointSet.getSize(sets, 14) == 7);
 	}
 	
-	// Union by height - Same size trees
+	// Union by height - Same height trees
 	
 	@Test
-	public void unionByHeightMergesRootsCorrectlyWithSameSizeTrees() {
-		//DisjointSet.unionByHeight(sets, 7, 14);
-		//assertTrue(sets[5] == 4);
+	public void unionByHeightMergesRootsCorrectlyWithSameHeightTrees() {
+		DisjointSet.unionByHeight(sets, 9, 3);
+		assertEquals(4, DisjointSet.findRecursive(sets, 9));
+		assertEquals(4, DisjointSet.findRecursive(sets, 3));
+		
+	}
+	
+	@Test
+	public void unionByHeightGetsCorrectNewHeightWithSameHeightTrees() {
+		DisjointSet.unionByHeight(sets, 9, 3);
+		assertEquals(4, DisjointSet.getHeight(sets, 4));
+	}
+	
+	@Test
+	public void unionByHeightGetsCorrectNewSizeWithSameHeightTrees() {
+		DisjointSet.unionByHeight(sets, 9, 3);
+		assertEquals(7, DisjointSet.getSize(sets, 4));
+	}
+	
+	// Union by height - Nodes in the same tree
+	
+	@Test
+	public void unionByHeightWithNodesInTheSameTreeDoesNothing() {
+		DisjointSet.unionByHeight(sets, 13, 2);
+		assertEquals(5, DisjointSet.getSize(sets, DisjointSet.findRecursive(sets, 13)));
+		assertEquals(5, DisjointSet.getSize(sets, DisjointSet.findRecursive(sets, 2)));
+		assertEquals(1, DisjointSet.findRecursive(sets, 13));
+		assertEquals(1, DisjointSet.findRecursive(sets, 2));
+	}
+	
+	
+	
+	// Union by size - Different size trees
+	
+	@Test
+	public void unionBySizeMergesRootsCorrectlyWithDifferentSizeTrees() {
+		DisjointSet.unionBySize(sets, 4, 1);
+		assertEquals(1, sets[4]);
+	}
+	
+	@Test
+	public void unionBySizeGetsCorrectNewHeightWithDifferentSizeTrees() {
+		DisjointSet.unionBySize(sets, 4, 1);
+		assertEquals(4, DisjointSet.getHeight(sets, 1));
+	}
+	
+	@Test
+	public void unionBySizeGetsCorrectNewSizeWithDifferentSizeTrees() {
+		DisjointSet.unionBySize(sets, 4, 1);
+		assertEquals(8, DisjointSet.getSize(sets, 1));
+	}
+	
+	// Union by height - Same height trees
+	
+	@Test
+	public void unionBySizeMergesRootsCorrectlyWithSameSizeTrees() {
+		DisjointSet.unionBySize(sets, 5, 4);
+		assertEquals(4, DisjointSet.findRecursive(sets, 5));
+		assertEquals(4, DisjointSet.findRecursive(sets, 4));
+	}
+	
+	@Test
+	public void unionBySizeGetsCorrectNewHeightWithSameSizeTrees() {
+		DisjointSet.unionBySize(sets, 5, 4);
+		assertEquals(3, DisjointSet.getHeight(sets, 4));
+	}
+	
+	@Test
+	public void unionBySizeGetsCorrectNewSizeWithSameSizeTrees() {
+		DisjointSet.unionBySize(sets, 5, 4);
+		assertEquals(6, DisjointSet.getSize(sets, 4));
+	}
+	
+	// Union by size - Nodes in the same tree
+	
+	@Test
+	public void unionBySizeWithNodesInTheSameTreeDoesNothing() {
+		DisjointSet.unionBySize(sets, 13, 2);
+		assertEquals(5, DisjointSet.getSize(sets, DisjointSet.findRecursive(sets, 13)));
+		assertEquals(5, DisjointSet.getSize(sets, DisjointSet.findRecursive(sets, 2)));
+		assertEquals(1, DisjointSet.findRecursive(sets, 13));
+		assertEquals(1, DisjointSet.findRecursive(sets, 2));
 	}
 	
 }

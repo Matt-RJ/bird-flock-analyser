@@ -86,6 +86,7 @@ public class MainMenuController {
 	@FXML
 	public void createSetsArray(ActionEvent event) {
 		Main.birdAnalyser.instantiateDisjointSetArray(ImageEditor.getBlackWhiteImage());
+		Main.birdAnalyser.combinePixels(ImageEditor.getBlackWhiteImage(), 0);
 	}
 	
 	@FXML

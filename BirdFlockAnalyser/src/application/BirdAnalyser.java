@@ -62,9 +62,118 @@ public class BirdAnalyser {
 		
 		System.out.println(setsMade + " sets have been created, 1 for each black pixel.");
 		
+//		for (int i = 0; i < pixelsInImage; i++) {
+//			System.out.println("Index: " + i + "   Value: " + dset.getSets()[i]);
+//		}
+	}
+	
+	public void instantiateDisjointSetArray2(Image image) {
+		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
+		dset = new DisjointSet(pixelsInImage);
+		
 		for (int i = 0; i < pixelsInImage; i++) {
-			System.out.println("Index: " + i + "   Value: " + dset.getSets()[i]);
+			int[] coords = getCoordinates(i);
+			int rightNode = getRightNode(coords[0], coords[1]);
+			int bottomRightNode = getBottomRightNode(coords[0], coords[1]);
+			int bottomNode = getBottomNode(coords[0], coords[1]);
+			
+			if (ImageEditor.pixelIsBlack(image, coords[0], coords[1])) {
+				if (dset.getSets()[i] == 0) {
+					setNode(coords[0], coords[1], SINGLETON);
+				}
+				if (rightNode == 0) {
+					int rightNodeCoords;
+					
+				}
+			}
+			//if (ImageEditor.pixelIsBlack(image, , y))
 		}
+	}
+	
+	// TODO: Finish these methods and add them to conbinePixels
+	
+	public void mergeRight(Image image, int index) {
+		int[] currentCoords = getCoordinates(index);
+		
+		if (currentCoords[0] + 1 < image.getWidth() &&
+			currentCoords[0] + 1 < dset.getSets().length &&
+			dset.getSets()[index+1] != 0) {
+			DisjointSet.unionBySize(dset.getSets(), index, index+1);
+		}
+	}
+	
+	public void mergeBottomRight(Image image, int index) {
+		int[] currentCoords = getCoordinates(index);
+		int imageHeight = (int) image.getHeight();
+		int imageWidth = (int) image.getWidth();
+		
+		if (currentCoords[0]+1 < imageWidth &&
+			currentCoords[1]+1 < imageHeight &&
+			currentCoords[0]+2 < dset.getSets().length) {
+			
+			if (dset.getSets()[index+imageWidth+1] != 0) {
+				DisjointSet.unionBySize(dset.getSets(), index, index+imageWidth+1);
+			}
+		}
+	}
+	
+	public void mergeBottom(Image image, int index) {
+		int[] currentCoords = getCoordinates(index);
+		int imageHeight = (int) image.getHeight();
+		int imageWidth = (int) image.getWidth();
+		if (currentCoords[1]+1 < imageHeight &&
+			currentCoords[1]+2 < dset.getSets().length) {
+			if (dset.getSets()[index+imageWidth] != 0) {
+				DisjointSet.unionByHeight(dset.getSets(), index, index+imageWidth);
+			}
+		}
+	}
+	
+	/**
+	 * Combines a disjoint set array of singletons into trees,
+	 * one tree per bird.
+	 * @param image - The currently-loaded image in the program
+	 * //TODO: Move countRoots and minSize to another method
+	 */
+	public void combinePixels(Image image, int minSize) {		
+		// TODO: Re-factor and split up this method
+		
+		System.out.println("Length of array: " + dset.getSets().length);
+		
+		for (int i = 0; i < dset.getSets().length; i++) {
+			if (dset.getSets()[i] != 0) {
+				mergeRight(image, i);				
+				mergeBottomRight(image,i); 
+				mergeBottom(image, i);
+			}
+		}
+		//printSetsToConsole();
+		System.out.println(countRoots(minSize) + " birds have been found.");
+	}
+	
+	public void printSetsToConsole() {
+		int imageHeight = (int) image.getHeight();
+		int imageWidth = (int) image.getWidth();
+		int[] sets = dset.getSets();
+		
+		for (int i = 0; i < sets.length; i++) {
+			System.out.print("   " + sets[i] + "   ");
+			if (getCoordinates(i)[0] == imageWidth-1) {
+				System.out.println("\n");
+			}
+		}
+		
+	}
+	
+	public int countRoots(int minSize) {
+		int roots = 0;
+		for (int i = 0; i < dset.getSets().length; i++) {
+			if ((dset.getSets()[i] < 0) && 
+				DisjointSet.getSize(dset.getSets(), i) >= minSize) {
+				roots++;
+			}
+		}
+		return roots;
 	}
 	
 	/**

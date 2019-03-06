@@ -27,8 +27,8 @@ public class MainMenuController {
 	@FXML private Button toBlackWhite;
 	
 	// Disjoint set operations
-	@FXML private Button createSetsArray;
-	
+	@FXML private Button locateBirds;
+	@FXML private Slider minSize;
 	
 	// IMAGE LOADING AND MANIPULATION
 	
@@ -53,6 +53,9 @@ public class MainMenuController {
 		
 		// Creates an instance of BirdAnalyser for the loaded image
 		Main.birdAnalyser = new BirdAnalyser(ImageEditor.getBlackWhiteImage());
+		
+		// Creates individual disjoint sets for each black pixel
+		Main.birdAnalyser.instantiateDisjointSetArray(ImageEditor.getBlackWhiteImage());
 	}
 	
 	@FXML
@@ -91,7 +94,10 @@ public class MainMenuController {
 	
 	@FXML
 	public void locateBirds(ActionEvent event) {
-		
+		Main.birdAnalyser.combinePixels(
+				ImageEditor.getBlackWhiteImage(), (int) minSize.getValue());
+		imagePanel.setImage(ImageEditor.drawAllRects(Main.birdAnalyser.getImage(),
+				Main.birdAnalyser.getBirdBoundaries()));
 	}
 	
 	

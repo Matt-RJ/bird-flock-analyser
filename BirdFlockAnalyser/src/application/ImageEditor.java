@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -114,6 +115,61 @@ public abstract class ImageEditor {
 				
 				pw.setColor(x, y, new Color(newRGB,newRGB,newRGB,pixelColor.getOpacity()));
 				
+			}
+		}
+		
+		return processedImage;
+	}
+	
+	public static Image drawRect(Image image, int top, int right, int bottom, int left) {
+		Color color = new Color(0, 1, 1, 1);
+		WritableImage processedImage = new WritableImage(
+				(int) image.getWidth(), (int) image.getHeight());
+		PixelWriter pw = processedImage.getPixelWriter();
+		
+		// Draw top line
+		for (int x = left; x == right; x++) {
+			pw.setColor(x, top, color);
+		}
+		// Draw right line
+		
+		// Draw bottom line
+		
+		// Draw left line
+		
+		return processedImage;
+	}
+	
+	public static Image drawAllRects(Image image, ArrayList<BirdBoundary> boundaries) {
+		Color color = new Color(1, 0, 0, 1);
+		WritableImage processedImage = new WritableImage(
+				(int) image.getWidth(), (int) image.getHeight());
+		//processedImage = (WritableImage) image;
+		PixelWriter pw = processedImage.getPixelWriter();
+		
+		// TODO
+		
+		for (BirdBoundary bb : boundaries) {
+			int top = bb.getTopCoord();
+			int right = bb.getRightCoord();
+			int bottom = bb.getBottomCoord();
+			int left = bb.getLeftCoord();
+			
+			// Draw top line
+			for (int x = left; x < right; x++) {
+				pw.setColor(x, top, color);
+			}
+			// Draw right line
+			for (int y = top; y < bottom; y++) {
+				if (y < image.getHeight()) pw.setColor(right, y, color);
+			}
+			// Draw bottom line
+			for (int x = left; x < right; x++) {
+				if (bottom < (int) image.getHeight()) pw.setColor(x, bottom, color);
+			}
+			// Draw left line
+			for (int y = top; y < bottom; y++) {
+				if (bottom < (int) image.getHeight()) pw.setColor(left, y, color);
 			}
 		}
 		

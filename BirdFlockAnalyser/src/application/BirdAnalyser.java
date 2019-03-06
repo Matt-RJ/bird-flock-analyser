@@ -1,5 +1,7 @@
 package application;
 
+import java.util.ArrayList;
+
 import javafx.scene.image.Image;
 
 /**
@@ -13,6 +15,8 @@ public class BirdAnalyser {
 	private DisjointSet dset;
 	private Image image;
 	private final int SINGLETON = 0x80001001;
+	
+	private ArrayList<BirdBoundary> birdBoundaries = new ArrayList<>();
 	
 	public DisjointSet getDset() {
 		return this.dset;
@@ -28,6 +32,14 @@ public class BirdAnalyser {
 		return this.image;
 	}
 	
+	public ArrayList<BirdBoundary> getBirdBoundaries() {
+		return this.birdBoundaries;
+	}
+	
+	public void setBirdBoundaries(ArrayList<BirdBoundary> birdBoundaries) {
+		this.birdBoundaries = birdBoundaries;
+	}
+	
 	public BirdAnalyser() {
 		
 	}
@@ -37,7 +49,8 @@ public class BirdAnalyser {
 	
 	/**
 	 * Instantiates an array of disjoint set nodes based on
-	 * a black and white image's pixels and dimensions.
+	 * a black and white image's pixels and dimensions. All of
+	 * the black pixels are turned into singletons.
 	 * 
 	 * @param image - The javaFX image to base the array on.
 	 */
@@ -45,7 +58,6 @@ public class BirdAnalyser {
 		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
 		dset = new DisjointSet(pixelsInImage);
 		
-		// TODO: Test with setsMade and remove
 		int setsMade = 0;
 		for (int i = 0; i < pixelsInImage; i++) {
 			int[] coords = getCoordinates(i);
@@ -61,37 +73,14 @@ public class BirdAnalyser {
 		}
 		
 		System.out.println(setsMade + " sets have been created, 1 for each black pixel.");
-		
-//		for (int i = 0; i < pixelsInImage; i++) {
-//			System.out.println("Index: " + i + "   Value: " + dset.getSets()[i]);
-//		}
 	}
-	
-	public void instantiateDisjointSetArray2(Image image) {
-		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
-		dset = new DisjointSet(pixelsInImage);
 		
-		for (int i = 0; i < pixelsInImage; i++) {
-			int[] coords = getCoordinates(i);
-			int rightNode = getRightNode(coords[0], coords[1]);
-			int bottomRightNode = getBottomRightNode(coords[0], coords[1]);
-			int bottomNode = getBottomNode(coords[0], coords[1]);
-			
-			if (ImageEditor.pixelIsBlack(image, coords[0], coords[1])) {
-				if (dset.getSets()[i] == 0) {
-					setNode(coords[0], coords[1], SINGLETON);
-				}
-				if (rightNode == 0) {
-					int rightNodeCoords;
-					
-				}
-			}
-			//if (ImageEditor.pixelIsBlack(image, , y))
-		}
-	}
-	
-	// TODO: Finish these methods and add them to conbinePixels
-	
+	/**
+	 * Performs an union by size of two disjoint sets.
+	 * @param image - The image the set array is based on
+	 * @param index - The index in the dset array of the node to
+	 * merge with the node to its immediate right.
+	 */
 	public void mergeRight(Image image, int index) {
 		int[] currentCoords = getCoordinates(index);
 		
@@ -102,6 +91,12 @@ public class BirdAnalyser {
 		}
 	}
 	
+	/**
+	 * Performs an union by size of two disjoint sets.
+	 * @param image - The image the set array is based on
+	 * @param index - The index in the dset array of the node to
+	 * merge with the node to the bottom-right.
+	 */
 	public void mergeBottomRight(Image image, int index) {
 		int[] currentCoords = getCoordinates(index);
 		int imageHeight = (int) image.getHeight();
@@ -117,6 +112,12 @@ public class BirdAnalyser {
 		}
 	}
 	
+	/**
+	 * Performs an union by size of two disjoint sets.
+	 * @param image - The image the set array is based on
+	 * @param index - The index in the dset array of the node to
+	 * merge with the node below it.
+	 */
 	public void mergeBottom(Image image, int index) {
 		int[] currentCoords = getCoordinates(index);
 		int imageHeight = (int) image.getHeight();
@@ -129,15 +130,18 @@ public class BirdAnalyser {
 		}
 	}
 	
+	public void mergeBottomLeft(Image image, int index) {
+		// TODO
+	}
+	
 	/**
 	 * Combines a disjoint set array of singletons into trees,
 	 * one tree per bird.
+	 * 
 	 * @param image - The currently-loaded image in the program
-	 * //TODO: Move countRoots and minSize to another method
 	 */
 	public void combinePixels(Image image, int minSize) {		
-		// TODO: Re-factor and split up this method
-		
+		// TODO: Remove print when done
 		System.out.println("Length of array: " + dset.getSets().length);
 		
 		for (int i = 0; i < dset.getSets().length; i++) {
@@ -147,33 +151,115 @@ public class BirdAnalyser {
 				mergeBottom(image, i);
 			}
 		}
-		//printSetsToConsole();
-		System.out.println(countRoots(minSize) + " birds have been found.");
+		
+		int birdsFound = countBirds(minSize);
+		System.out.println(birdsFound + " birds have been found.");
+		
+		
+		// TODO: Test and edit
+		createBirdBoundaries(image);
+		// Creates boxes around each bird
+		// birdCorners = new int[birdsFound][5];
 	}
 	
+	public void createBirdBoundaries(Image image) {
+		int[] sets = dset.getSets();
+		// TODO: Finish this method
+		
+		for (int current = 0; current < dset.getSets().length; current++) { // i = current pixel
+			
+			if (sets[current] != 0) { // Ignores white pixels
+				
+				int currentSet = DisjointSet.findRecursive(sets, current);
+				int[] currentCoords = getCoordinates(current);
+				
+				// TODO: No coordinates are currently updating
+				
+				for (BirdBoundary a : birdBoundaries) { // Finds right bb object
+					if (currentSet == a.getRootIndex()) {
+						
+						// Check if topmost
+						int highestY = getCoordinates(a.getTop())[1];
+						if (currentCoords[1] <= highestY) { // TODO: Always false
+							a.setTop(current); 
+							a.setTopCoord(getCoordinates(current)[1]);
+						}
+						// Check if rightmost
+						int highestX = getCoordinates(a.getRight())[0];
+						if (currentCoords[0] >= highestX) {
+							a.setRight(current);
+							a.setRightCoord(getCoordinates(current)[0]);
+						}
+						// Check if bottom-most
+						int lowestY = getCoordinates(a.getBottom())[1];
+						if (currentCoords[1] >= lowestY) {
+							a.setBottom(current);
+							a.setBottomCoord(getCoordinates(current)[0]);
+						}
+						// Check if leftmost
+						int lowestX = getCoordinates(a.getLeft())[0];
+						if (currentCoords[0] <= lowestX) { // TODO: Always false
+							a.setLeft(current);
+							a.setLeftCoord(getCoordinates(current)[1]);
+						}
+					}
+				} 
+			}
+		}
+		
+		for (BirdBoundary a : birdBoundaries) {
+			System.out.println(a.getRootIndex() + " has a topmost node at y: " + getCoordinates(a.getTop())[1]);
+			System.out.println(a.getRootIndex() + " has a rightmost node at x: " + getCoordinates(a.getRight())[0]);
+			System.out.println(a.getRootIndex() + " has a bottom-most node at y: " + getCoordinates(a.getBottom())[1]);
+			System.out.println(a.getRootIndex() + " has a leftmost node at x: " + getCoordinates(a.getLeft())[0]);
+			System.out.println();
+		}
+		
+	}
+	
+	/**
+	 * Prints out a version of the disjoint set array to the console.
+	 */
 	public void printSetsToConsole() {
-		int imageHeight = (int) image.getHeight();
 		int imageWidth = (int) image.getWidth();
 		int[] sets = dset.getSets();
 		
 		for (int i = 0; i < sets.length; i++) {
-			System.out.print("   " + sets[i] + "   ");
+			if (DisjointSet.isRoot(sets, i)) System.out.print("Root ");
+			else System.out.print(sets[i] + " ");
+			
 			if (getCoordinates(i)[0] == imageWidth-1) {
-				System.out.println("\n");
+				System.out.println();
 			}
 		}
 		
 	}
 	
-	public int countRoots(int minSize) {
+	/**
+	 * Counts the total number of disjoint sets in the dset array,
+	 * ignoring all sets that are smaller than minSize. All of the found
+	 * sets are added to birdBoundaries.
+	 * 
+	 * @param minSize - The smallest size of a tree for its root to count
+	 * @return The number of roots/trees in the dset array.
+	 */
+	public int countBirds(int minSize) {
 		int roots = 0;
+		int imageHeight = (int) image.getHeight();
+		int imageWidth = (int) image.getWidth();
+				
 		for (int i = 0; i < dset.getSets().length; i++) {
 			if ((dset.getSets()[i] < 0) && 
 				DisjointSet.getSize(dset.getSets(), i) >= minSize) {
 				roots++;
+				// Updates birdBoundaries with the found root
+				
+				BirdBoundary bb = new BirdBoundary(i, imageHeight,0,0,imageWidth);
+				birdBoundaries.add(bb);
 			}
 		}
 		return roots;
+		
 	}
 	
 	/**
@@ -208,38 +294,6 @@ public class BirdAnalyser {
 	 */
 	public void setNode(int x, int y, int newNode) {
 		dset.getSets()[((int) image.getWidth() * y) + x] = newNode;
-	}
-	
-	public int getTopNode(int x, int y) {
-		return getNode(x, y-1);
-	}
-	
-	public int getTopRightNode(int x, int y) {
-		return getNode(x+1,y-1);
-	}
-	
-	public int getRightNode(int x, int y) {
-		return getNode(x+1,y);
-	}
-	
-	public int getBottomRightNode(int x, int y) {
-		return getNode(x+1,y+1);
-	}
-	
-	public int getBottomNode(int x, int y) {
-		return getNode(x,y+1);
-	}
-	
-	public int getBottmLeftNode(int x, int y) {
-		return getNode(x-1,y+1);
-	}
-	
-	public int getLeftNode(int x, int y) {
-		return getNode(x-1,y);
-	}
-	
-	public int getTopLeftNode(int x, int y) {
-		return getNode(x-1,y-1);
 	}
 	
 }

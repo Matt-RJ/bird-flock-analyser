@@ -144,8 +144,6 @@ public class DisjointSet {
 		
 	}
 	
-	// TODO: Add union methods
-	
 	/**
 	 * Merges two disjoint set trees by their height. The
 	 * root of the shorter tree becomes a child or the root of

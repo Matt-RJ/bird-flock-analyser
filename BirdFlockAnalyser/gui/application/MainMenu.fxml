@@ -11,6 +11,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainMenuController">
    <top>
@@ -36,13 +37,25 @@
    <right>
       <VBox prefHeight="575.0" prefWidth="280.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="showOriginalImage" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="123.0" mnemonicParsing="false" onAction="#showOriginalImage" prefHeight="25.0" prefWidth="242.0" text="Show Original Image" />
-            <Separator prefHeight="35.0" prefWidth="240.0" />
-            <Label alignment="CENTER" layoutX="10.0" layoutY="45.0" prefHeight="20.0" prefWidth="240.0" text="Colour Threshold" underline="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="248.0" text="Image Settings">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="showOriginalImage" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="123.0" mnemonicParsing="false" onAction="#showOriginalImage" prefHeight="25.0" prefWidth="244.0" text="Show Original Image" />
+            <Separator layoutX="30.0" layoutY="55.0" prefHeight="35.0" prefWidth="240.0" />
+            <Label alignment="CENTER" layoutX="10.0" layoutY="45.0" prefHeight="16.0" prefWidth="240.0" text="Colour Threshold" underline="true" />
             <Slider fx:id="blackWhiteThreshold" max="255.0" showTickLabels="true" showTickMarks="true" value="128.0" />
             <Button fx:id="toBlackWhite" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#toBlackWhite" prefHeight="25.0" prefWidth="242.0" text="Show Black/White Image" />
-            <Separator layoutX="30.0" layoutY="55.0" prefHeight="35.0" prefWidth="240.0" />
-            <Button fx:id="createSetsArray" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#createSetsArray" prefHeight="25.0" prefWidth="242.0" text="Generate Sets for each Black Pixel" />
+            <Separator prefHeight="35.0" prefWidth="240.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="248.0" text="Bird Counting Settings">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" prefHeight="16.0" prefWidth="240.0" text="Minimum Bird Size (Pixels)" underline="true" />
+            <Slider fx:id="minSize" max="255.0" showTickLabels="true" showTickMarks="true" value="128.0" />
+            <Button fx:id="locateBirds" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#locateBirds" prefHeight="25.0" prefWidth="242.0" text="Count Birds" />
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />

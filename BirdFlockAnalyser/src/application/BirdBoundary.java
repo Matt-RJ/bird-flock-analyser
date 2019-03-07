@@ -1,6 +1,10 @@
 package application;
 
 /**
+ * This class stores all valid bird disjoint set trees, along
+ * with the indices of the trees' topmost, rightmost, bottom-most,
+ * and leftmost nodes for the purpose of drawing borders around each
+ * bird.
  * 
  * @author Mantas Rajackas
  *
@@ -8,104 +12,117 @@ package application;
 public class BirdBoundary {
 	
 	private int rootIndex;
-	private int top;
-	private int right;
-	private int bottom;
-	private int left;
+	private int topIndex; // Index of topmost node
+	private int rightIndex; // Index of rightmost node
+	private int bottomIndex; // Index of bottom-most node
+	private int leftIndex; // Index of leftmost node
 	
-	private int topCoord;
-	private int rightCoord;
-	private int bottomCoord;
-	private int leftCoord;
+	private int topY; // Highest node's Y value
+	private int rightX; // Rightmost node's X value
+	private int bottomY; // Bottom-most node's Y value
+	private int leftX; // Leftmost node's X value
 	
 	public BirdBoundary(int rootIndex) {
 		this.rootIndex = rootIndex;
 	}
 	
-	public BirdBoundary(int rootIndex, int top, int right,
-						int bottom, int left) {
+	public BirdBoundary(int rootIndex, int topIndex, int rightIndex,
+						int bottomIndex, int leftIndex) {
 		this.rootIndex = rootIndex;
-		this.top = top;
-		this.right = right;
-		this.bottom = bottom;
-		this.left = left;
+		this.topIndex = topIndex;
+		this.rightIndex = rightIndex;
+		this.bottomIndex = bottomIndex;
+		this.leftIndex = leftIndex;
 	}
 	
-	public BirdBoundary(int rootIndex, int top, int right,
-						int bottom, int left, int topCoord,
-						int rightCoord, int bottomCoord,
-						int leftCoord) {
+	public BirdBoundary(int rootIndex, int topIndex, int rightIndex,
+						int bottomIndex, int leftIndex, int topY,
+						int rightX, int bottomY, int leftX) {
 		this.rootIndex = rootIndex;
-		this.top = top;
-		this.right = right;
-		this.bottom = bottom;
-		this.left = left;
-		this.topCoord = topCoord;
-		this.rightCoord = rightCoord;
-		this.bottomCoord = bottomCoord;
-		this.leftCoord = leftCoord;
+		this.topIndex = topIndex;
+		this.rightIndex = rightIndex;
+		this.bottomIndex = bottomIndex;
+		this.leftIndex = leftIndex;
+		
+		this.topY = topY;
+		this.rightX = rightX;
+		this.bottomY = bottomY;
+		this.leftX = leftX;
 	}
-	
+
 	public int getRootIndex() {
 		return rootIndex;
 	}
+
 	public void setRootIndex(int rootIndex) {
 		this.rootIndex = rootIndex;
 	}
-	public int getTop() {
-		return top;
-	}
-	public void setTop(int top) {
-		this.top = top;
-	}
-	public int getRight() {
-		return right;
-	}
-	public void setRight(int right) {
-		this.right = right;
-	}
-	public int getBottom() {
-		return bottom;
-	}
-	public void setBottom(int bottom) {
-		this.bottom = bottom;
-	}
-	public int getLeft() {
-		return left;
-	}
-	public void setLeft(int left) {
-		this.left = left;
+
+	public int getTopIndex() {
+		return topIndex;
 	}
 
-	public int getTopCoord() {
-		return topCoord;
+	public void setTopIndex(int topIndex) {
+		this.topIndex = topIndex;
 	}
 
-	public void setTopCoord(int topCoord) {
-		this.topCoord = topCoord;
+	public int getRightIndex() {
+		return rightIndex;
 	}
 
-	public int getRightCoord() {
-		return rightCoord;
+	public void setRightIndex(int rightIndex) {
+		this.rightIndex = rightIndex;
 	}
 
-	public void setRightCoord(int rightCoord) {
-		this.rightCoord = rightCoord;
+	public int getBottomIndex() {
+		return bottomIndex;
 	}
 
-	public int getBottomCoord() {
-		return bottomCoord;
+	public void setBottomIndex(int bottomIndex) {
+		this.bottomIndex = bottomIndex;
 	}
 
-	public void setBottomCoord(int bottomCoord) {
-		this.bottomCoord = bottomCoord;
+	public int getLeftIndex() {
+		return leftIndex;
 	}
 
-	public int getLeftCoord() {
-		return leftCoord;
+	public void setLeftIndex(int leftIndex) {
+		this.leftIndex = leftIndex;
 	}
 
-	public void setLeftCoord(int leftCoord) {
-		this.leftCoord = leftCoord;
+	public int getTopY() {
+		return topY;
 	}
+
+	public void setTopY(int topY) {
+		this.topY = topY;
+	}
+
+	public int getRightX() {
+		return rightX;
+	}
+
+	public void setRightX(int rightX) {
+		this.rightX = rightX;
+	}
+
+	public int getBottomY() {
+		return bottomY;
+	}
+
+	public void setBottomY(int bottomY) {
+		this.bottomY = bottomY;
+	}
+
+	public int getLeftX() {
+		return leftX;
+	}
+
+	public void setLeftX(int leftX) {
+		this.leftX = leftX;
+	}
+	
 }
+		
+	
+	

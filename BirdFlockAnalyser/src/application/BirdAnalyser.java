@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 /**
  * This class contains the methods which allow the DisjointSet class to
  * interact with the GUI and the rest of the system.
+ * 
  * @author Mantas Rajackas
  *
  */
@@ -55,6 +56,9 @@ public class BirdAnalyser {
 	 * @param image - The javaFX image to base the array on.
 	 */
 	public void instantiateDisjointSetArray(Image image) {
+		
+		// TODO: Do this when turning image to grayscale
+		
 		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
 		dset = new DisjointSet(pixelsInImage);
 		
@@ -173,47 +177,45 @@ public class BirdAnalyser {
 				int currentSet = DisjointSet.findRecursive(sets, current);
 				int[] currentCoords = getCoordinates(current);
 				
-				// TODO: No coordinates are currently updating
-				
 				for (BirdBoundary a : birdBoundaries) { // Finds right bb object
 					if (currentSet == a.getRootIndex()) {
 						
 						// Check if topmost
-						int highestY = getCoordinates(a.getTop())[1];
-						if (currentCoords[1] <= highestY) { // TODO: Always false
-							a.setTop(current); 
-							a.setTopCoord(getCoordinates(current)[1]);
+						int topMost = a.getTopY();
+						if (currentCoords[1] < topMost) {
+							a.setTopIndex(current); 
+							a.setTopY(getCoordinates(current)[1]);
 						}
 						// Check if rightmost
-						int highestX = getCoordinates(a.getRight())[0];
-						if (currentCoords[0] >= highestX) {
-							a.setRight(current);
-							a.setRightCoord(getCoordinates(current)[0]);
+						int rightMost = a.getRightX();
+						if (currentCoords[0] > rightMost) {
+							a.setRightIndex(current);
+							a.setRightX(getCoordinates(current)[0]);
 						}
 						// Check if bottom-most
-						int lowestY = getCoordinates(a.getBottom())[1];
-						if (currentCoords[1] >= lowestY) {
-							a.setBottom(current);
-							a.setBottomCoord(getCoordinates(current)[0]);
+						int bottomMost = a.getBottomY();
+						if (currentCoords[1] > bottomMost) {
+							a.setBottomIndex(current);
+							a.setBottomY(getCoordinates(current)[1]);
 						}
 						// Check if leftmost
-						int lowestX = getCoordinates(a.getLeft())[0];
-						if (currentCoords[0] <= lowestX) { // TODO: Always false
-							a.setLeft(current);
-							a.setLeftCoord(getCoordinates(current)[1]);
+						int leftMost = a.getLeftX();
+						if (currentCoords[0] < leftMost) {
+							a.setLeftIndex(current);
+							a.setLeftX(getCoordinates(current)[0]);
 						}
 					}
 				} 
 			}
 		}
-		
-		for (BirdBoundary a : birdBoundaries) {
-			System.out.println(a.getRootIndex() + " has a topmost node at y: " + getCoordinates(a.getTop())[1]);
-			System.out.println(a.getRootIndex() + " has a rightmost node at x: " + getCoordinates(a.getRight())[0]);
-			System.out.println(a.getRootIndex() + " has a bottom-most node at y: " + getCoordinates(a.getBottom())[1]);
-			System.out.println(a.getRootIndex() + " has a leftmost node at x: " + getCoordinates(a.getLeft())[0]);
-			System.out.println();
-		}
+//		
+//		for (BirdBoundary a : birdBoundaries) {
+//			System.out.println(a.getRootIndex() + " has a topmost node at y: " + a.getTopY());
+//			System.out.println(a.getRootIndex() + " has a rightmost node at x: " + a.getRightX());
+//			System.out.println(a.getRootIndex() + " has a bottom-most node at y: " + a.getBottomY());
+//			System.out.println(a.getRootIndex() + " has a leftmost node at x: " + a.getLeftX());
+//			System.out.println();
+//		}
 		
 	}
 	
@@ -252,9 +254,9 @@ public class BirdAnalyser {
 			if ((dset.getSets()[i] < 0) && 
 				DisjointSet.getSize(dset.getSets(), i) >= minSize) {
 				roots++;
-				// Updates birdBoundaries with the found root
 				
-				BirdBoundary bb = new BirdBoundary(i, imageHeight,0,0,imageWidth);
+				// Updates birdBoundaries with the found root
+				BirdBoundary bb = new BirdBoundary(i,0,0,0,0,imageHeight,0,0,imageWidth);
 				birdBoundaries.add(bb);
 			}
 		}

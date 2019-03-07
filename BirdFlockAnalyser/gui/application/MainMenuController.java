@@ -94,10 +94,12 @@ public class MainMenuController {
 	
 	@FXML
 	public void locateBirds(ActionEvent event) {
+		Main.birdAnalyser.instantiateDisjointSetArray((ImageEditor.getBlackWhiteImage()));
 		Main.birdAnalyser.combinePixels(
 				ImageEditor.getBlackWhiteImage(), (int) minSize.getValue());
-		imagePanel.setImage(ImageEditor.drawAllRects(Main.birdAnalyser.getImage(),
-				Main.birdAnalyser.getBirdBoundaries()));
+		imagePanel.setImage(ImageEditor.drawAllRects(ImageEditor.getBlackWhiteImage(),
+													 ImageEditor.getLoadedImage(),
+													 Main.birdAnalyser.getBirdBoundaries()));
 	}
 	
 	

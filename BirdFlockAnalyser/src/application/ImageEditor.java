@@ -121,55 +121,52 @@ public abstract class ImageEditor {
 		return processedImage;
 	}
 	
-	public static Image drawRect(Image image, int top, int right, int bottom, int left) {
-		Color color = new Color(0, 1, 1, 1);
+	/**
+	 * Draws rectangles around every bird that has been found in the image
+	 * @param image - The original image of the birds on top of which
+	 * the rectangles will be drawn.
+	 * @param boundaries - The ArrayList of BirdBoundary objects that hold
+	 * each bird's outer positions.
+	 * @return - A version of image with boxes drawn around every bird.
+	 */
+	public static Image drawAllRects(Image image, Image canvasImage,
+									 ArrayList<BirdBoundary> boundaries) {
+		
+		Color color = new Color(0, 0, 1, 1);
 		WritableImage processedImage = new WritableImage(
 				(int) image.getWidth(), (int) image.getHeight());
+		
+		PixelReader pr = canvasImage.getPixelReader();
 		PixelWriter pw = processedImage.getPixelWriter();
 		
-		// Draw top line
-		for (int x = left; x == right; x++) {
-			pw.setColor(x, top, color);
+		// Copies the original image to processedImage
+		for (int y = 0; y < canvasImage.getHeight(); y++) {
+			for (int x = 0; x < canvasImage.getWidth(); x++) {
+				pw.setColor(x, y, pr.getColor(x, y));
+			}
 		}
-		// Draw right line
-		
-		// Draw bottom line
-		
-		// Draw left line
-		
-		return processedImage;
-	}
-	
-	public static Image drawAllRects(Image image, ArrayList<BirdBoundary> boundaries) {
-		Color color = new Color(1, 0, 0, 1);
-		WritableImage processedImage = new WritableImage(
-				(int) image.getWidth(), (int) image.getHeight());
-		//processedImage = (WritableImage) image;
-		PixelWriter pw = processedImage.getPixelWriter();
-		
-		// TODO
 		
 		for (BirdBoundary bb : boundaries) {
-			int top = bb.getTopCoord();
-			int right = bb.getRightCoord();
-			int bottom = bb.getBottomCoord();
-			int left = bb.getLeftCoord();
+			int top = bb.getTopY();
+			int right = bb.getRightX();
+			int bottom = bb.getBottomY();
+			int left = bb.getLeftX();
 			
 			// Draw top line
-			for (int x = left; x < right; x++) {
+			for (int x = left; x <= right; x++) {
 				pw.setColor(x, top, color);
 			}
 			// Draw right line
-			for (int y = top; y < bottom; y++) {
-				if (y < image.getHeight()) pw.setColor(right, y, color);
+			for (int y = top; y <= bottom; y++) {
+				pw.setColor(right, y, color);
 			}
 			// Draw bottom line
-			for (int x = left; x < right; x++) {
-				if (bottom < (int) image.getHeight()) pw.setColor(x, bottom, color);
+			for (int x = left; x <= right; x++) {
+				pw.setColor(x, bottom, color);
 			}
 			// Draw left line
-			for (int y = top; y < bottom; y++) {
-				if (bottom < (int) image.getHeight()) pw.setColor(left, y, color);
+			for (int y = top; y <= bottom; y++) {
+				pw.setColor(left, y, color);
 			}
 		}
 		

@@ -174,7 +174,6 @@ public class DisjointSet {
 		// The height and size of the new tree
 		int newHeight = (pTreeHeight == qTreeHeight) ?
 				pTreeHeight + 1 : getHeight(sets, deeperRoot);
-		
 		int newSize = getSize(sets, rootP) + getSize(sets, rootQ);
 		
 		// Joins the two nodes

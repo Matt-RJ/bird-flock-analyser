@@ -10,6 +10,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -21,11 +22,6 @@
             <items>
                   <MenuItem fx:id="openImage" mnemonicParsing="false" onAction="#openImage" text="Open Image" />
               <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#quitProgram" text="Quit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Image">
-            <items>
-              <MenuItem mnemonicParsing="false" text="TODO" />
             </items>
           </Menu>
         </menus>
@@ -53,12 +49,23 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="16.0" prefWidth="240.0" text="Minimum Bird Size (Pixels)" underline="true" />
-            <Slider fx:id="minSize" max="255.0" showTickLabels="true" showTickMarks="true" value="128.0" />
+            <Label fx:id="minSizeLabel" alignment="CENTER" prefHeight="16.0" prefWidth="240.0" text="Minimum Bird Size (Pixels) - 128" underline="true" />
+            <Slider fx:id="minSize" max="255.0" onMouseClicked="#updatePixelSliderLabel" onMouseDragged="#updatePixelSliderLabel" onMouseEntered="#updatePixelSliderLabel" onMouseExited="#updatePixelSliderLabel" onMousePressed="#updatePixelSliderLabel" onMouseReleased="#updatePixelSliderLabel" showTickLabels="true" showTickMarks="true" value="128.0" />
             <Button fx:id="locateBirds" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#locateBirds" prefHeight="25.0" prefWidth="242.0" text="Count Birds" />
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />
          </padding></VBox>
    </right>
+   <bottom>
+      <Pane prefHeight="80.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="birdNumberLabel" alignment="CENTER" layoutY="14.0" prefHeight="53.0" prefWidth="900.0" text="Birds Found: ?">
+               <font>
+                  <Font name="Lucida Fax Regular" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </bottom>
 </BorderPane>

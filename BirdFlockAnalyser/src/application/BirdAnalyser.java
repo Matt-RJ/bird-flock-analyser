@@ -15,7 +15,7 @@ public class BirdAnalyser {
 	
 	private DisjointSet dset;
 	private Image image;
-	private final int SINGLETON = 0x80001001;
+	private final int SINGLETON = 0x80001001; // A single disjoint set node
 	
 	private ArrayList<BirdBoundary> birdBoundaries = new ArrayList<>();
 	
@@ -56,27 +56,20 @@ public class BirdAnalyser {
 	 * @param image - The javaFX image to base the array on.
 	 */
 	public void instantiateDisjointSetArray(Image image) {
-		
-		// TODO: Do this when turning image to grayscale
-		
 		int pixelsInImage = (int) (image.getHeight() * image.getWidth());
 		dset = new DisjointSet(pixelsInImage);
 		
-		int setsMade = 0;
 		for (int i = 0; i < pixelsInImage; i++) {
 			int[] coords = getCoordinates(i);
 			if (ImageEditor.pixelIsBlack(image, coords[0], coords[1])) {
 				// Black pixels - Single nodes for each
 				setNode(coords[0],coords[1],SINGLETON);
-				setsMade++;
 			}
 			else {
 				// White pixels
 				setNode(coords[0],coords[1],0);
 			}
 		}
-		
-		System.out.println(setsMade + " sets have been created, 1 for each black pixel.");
 	}
 		
 	/**
@@ -134,10 +127,6 @@ public class BirdAnalyser {
 		}
 	}
 	
-	public void mergeBottomLeft(Image image, int index) {
-		// TODO
-	}
-	
 	/**
 	 * Combines a disjoint set array of singletons into trees,
 	 * one tree per bird.
@@ -145,9 +134,6 @@ public class BirdAnalyser {
 	 * @param image - The currently-loaded image in the program
 	 */
 	public void combinePixels(Image image, int minSize) {		
-		// TODO: Remove print when done
-		System.out.println("Length of array: " + dset.getSets().length);
-		
 		for (int i = 0; i < dset.getSets().length; i++) {
 			if (dset.getSets()[i] != 0) {
 				mergeRight(image, i);				
@@ -155,20 +141,12 @@ public class BirdAnalyser {
 				mergeBottom(image, i);
 			}
 		}
-		
 		int birdsFound = countBirds(minSize);
 		System.out.println(birdsFound + " birds have been found.");
-		
-		
-		// TODO: Test and edit
-		createBirdBoundaries(image);
-		// Creates boxes around each bird
-		// birdCorners = new int[birdsFound][5];
 	}
 	
 	public void createBirdBoundaries(Image image) {
 		int[] sets = dset.getSets();
-		// TODO: Finish this method
 		
 		for (int current = 0; current < dset.getSets().length; current++) { // i = current pixel
 			
@@ -208,33 +186,6 @@ public class BirdAnalyser {
 				} 
 			}
 		}
-//		
-//		for (BirdBoundary a : birdBoundaries) {
-//			System.out.println(a.getRootIndex() + " has a topmost node at y: " + a.getTopY());
-//			System.out.println(a.getRootIndex() + " has a rightmost node at x: " + a.getRightX());
-//			System.out.println(a.getRootIndex() + " has a bottom-most node at y: " + a.getBottomY());
-//			System.out.println(a.getRootIndex() + " has a leftmost node at x: " + a.getLeftX());
-//			System.out.println();
-//		}
-		
-	}
-	
-	/**
-	 * Prints out a version of the disjoint set array to the console.
-	 */
-	public void printSetsToConsole() {
-		int imageWidth = (int) image.getWidth();
-		int[] sets = dset.getSets();
-		
-		for (int i = 0; i < sets.length; i++) {
-			if (DisjointSet.isRoot(sets, i)) System.out.print("Root ");
-			else System.out.print(sets[i] + " ");
-			
-			if (getCoordinates(i)[0] == imageWidth-1) {
-				System.out.println();
-			}
-		}
-		
 	}
 	
 	/**
@@ -246,6 +197,7 @@ public class BirdAnalyser {
 	 * @return The number of roots/trees in the dset array.
 	 */
 	public int countBirds(int minSize) {
+		birdBoundaries = new ArrayList<>();
 		int roots = 0;
 		int imageHeight = (int) image.getHeight();
 		int imageWidth = (int) image.getWidth();

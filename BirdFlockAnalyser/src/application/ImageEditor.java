@@ -129,19 +129,19 @@ public abstract class ImageEditor {
 	 * each bird's outer positions.
 	 * @return - A version of image with boxes drawn around every bird.
 	 */
-	public static Image drawAllRects(Image image, Image canvasImage,
+	public static Image drawAllRects(Image image,
 									 ArrayList<BirdBoundary> boundaries) {
 		
 		Color color = new Color(0, 0, 1, 1);
 		WritableImage processedImage = new WritableImage(
 				(int) image.getWidth(), (int) image.getHeight());
 		
-		PixelReader pr = canvasImage.getPixelReader();
+		PixelReader pr = image.getPixelReader();
 		PixelWriter pw = processedImage.getPixelWriter();
 		
 		// Copies the original image to processedImage
-		for (int y = 0; y < canvasImage.getHeight(); y++) {
-			for (int x = 0; x < canvasImage.getWidth(); x++) {
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
 				pw.setColor(x, y, pr.getColor(x, y));
 			}
 		}

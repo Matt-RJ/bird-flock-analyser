@@ -8,9 +8,11 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -27,11 +29,8 @@
         </menus>
       </MenuBar>
    </top>
-   <center>
-      <ImageView fx:id="imagePanel" fitHeight="450.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
-   </center>
    <right>
-      <VBox prefHeight="575.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="507.0" prefWidth="280.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="248.0" text="Image Settings">
                <font>
@@ -52,15 +51,26 @@
             <Label fx:id="minSizeLabel" alignment="CENTER" prefHeight="16.0" prefWidth="240.0" text="Minimum Bird Size (Pixels) - 128" underline="true" />
             <Slider fx:id="minSize" max="255.0" onMouseClicked="#updatePixelSliderLabel" onMouseDragged="#updatePixelSliderLabel" onMouseEntered="#updatePixelSliderLabel" onMouseExited="#updatePixelSliderLabel" onMousePressed="#updatePixelSliderLabel" onMouseReleased="#updatePixelSliderLabel" showTickLabels="true" showTickMarks="true" value="128.0" />
             <Button fx:id="locateBirds" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#locateBirds" prefHeight="25.0" prefWidth="242.0" text="Count Birds" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="245.0" prefHeight="40.0" prefWidth="248.0" text="Advanced Analysis">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="findIsolatedBird" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="340.0" mnemonicParsing="false" onAction="#findIsolatedBird" prefHeight="25.0" prefWidth="242.0" text="Find Most Isolated Bird" />
+            <TextArea fx:id="infoPanel" editable="false" prefHeight="141.0" prefWidth="240.0" text="Use File -&gt; Open Image to load your image of birds." wrapText="true">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </TextArea>
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="20.0" />
          </padding></VBox>
    </right>
    <bottom>
-      <Pane prefHeight="80.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+      <Pane prefHeight="52.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="birdNumberLabel" alignment="CENTER" layoutY="14.0" prefHeight="53.0" prefWidth="900.0" text="Birds Found: ?">
+            <Label fx:id="birdNumberLabel" alignment="CENTER" layoutY="8.0" prefHeight="37.0" prefWidth="900.0" text="Birds Found: ?">
                <font>
                   <Font name="Lucida Fax Regular" size="24.0" />
                </font>
@@ -68,4 +78,14 @@
          </children>
       </Pane>
    </bottom>
+   <center>
+      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="imagePanel" fitHeight="524.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </StackPane>
+   </center>
+   <left>
+      <Pane prefHeight="523.0" prefWidth="28.0" BorderPane.alignment="CENTER" />
+   </left>
 </BorderPane>

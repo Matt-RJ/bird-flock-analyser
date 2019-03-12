@@ -174,6 +174,51 @@ public abstract class ImageEditor {
 	}
 	
 	/**
+	 * Draws a rectangle on an image.
+	 * @param image - The image to draw on.
+	 * @param x - x coord of the top-left corner
+	 * @param y - y coord of the top-left corner
+	 * @param w - The width of the rectangle (pixels)
+	 * @param h - The height of the rectangle (pixels)
+	 * @param c - The colour of the rectangle's lines
+	 * @return A version of image, with the square drawn on it.
+	 */
+	public static Image rect(Image image, int x, int y, int w, int h, Color c) {
+		
+		WritableImage processedImage = new WritableImage(
+				(int) image.getWidth(), (int) image.getHeight());
+		
+		PixelReader pr = image.getPixelReader();
+		PixelWriter pw = processedImage.getPixelWriter();
+		
+		// Copies the original image to processedImage
+		for (int copyY = 0; copyY < image.getHeight(); copyY++) {
+			for (int copyX = 0; copyX < image.getWidth(); copyX++) {
+				pw.setColor(copyX, copyY, pr.getColor(copyX, copyY));
+			}
+		}
+		
+		// Top line
+		for (int x1 = x; x1 < x+w; x1++) {
+			pw.setColor(x1, y, c);
+		}
+		// Right line
+		for (int y1 = y; y1 < y+h; y1++) {
+			pw.setColor(x+w, y1, c);
+		}
+		// Bottom line
+		for (int x1 = x; x1 < x+w; x1++) {
+			pw.setColor(x1, y+h, c);
+		}
+		// Left line
+		for (int y1 = y; y1 < y+h;y1++) {
+			pw.setColor(x, y1, c);
+		}
+		
+		return processedImage;
+	}
+	
+	/**
 	 * Determines if a pixel in an Image object is black (R,G,B = 0)
 	 * @param image - The JavaFX image where the pixel is.
 	 * @param x - X coordinate.

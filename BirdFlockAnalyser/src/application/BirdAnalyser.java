@@ -3,6 +3,7 @@ package application;
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * This class contains the methods which allow the DisjointSet class to
@@ -16,6 +17,9 @@ public class BirdAnalyser {
 	private DisjointSet dset;
 	private Image image;
 	private final int SINGLETON = 0x80001001; // A single disjoint set node
+	
+	private int avgDistToOtherBirds;
+	private int biggestDistToOtherBirds;
 	
 	private ArrayList<BirdBoundary> birdBoundaries = new ArrayList<>();
 	
@@ -41,6 +45,18 @@ public class BirdAnalyser {
 		this.birdBoundaries = birdBoundaries;
 	}
 	
+	public int getAvgDistToOtherBirds() {
+		return avgDistToOtherBirds;
+	}
+	public void setAvgDistToOtherBirds(int avgDistToOtherBirds) {
+		this.avgDistToOtherBirds = avgDistToOtherBirds;
+	}
+	public int getBiggestDistToOtherBirds() {
+		return biggestDistToOtherBirds;
+	}
+	public void setBiggestDistToOtherBirds(int biggestDistToOtherBirds) {
+		this.biggestDistToOtherBirds = biggestDistToOtherBirds;
+	}
 	public BirdAnalyser() {
 		
 	}
@@ -148,7 +164,7 @@ public class BirdAnalyser {
 	public void createBirdBoundaries(Image image) {
 		int[] sets = dset.getSets();
 		
-		for (int current = 0; current < dset.getSets().length; current++) { // i = current pixel
+		for (int current = 0; current < dset.getSets().length; current++) {
 			
 			if (sets[current] != 0) { // Ignores white pixels
 				
@@ -213,8 +229,65 @@ public class BirdAnalyser {
 			}
 		}
 		return roots;
-		
 	}
+	
+	
+	
+	// ADVANCED ANALYSIS
+	
+	/**
+	 * Locates the most isolated bird in the image,
+	 * i.e. the bird with the biggest average distance
+	 * to all other birds.
+	 * @return The index of the most isolated bird in the sets array
+	 */
+	public BirdBoundary findMostIsolatedBird() {
+		BirdBoundary isoBird = null; // Isolated bird ID in the sets array
+		int highestAvgDist = 0;
+		int averageAvgDist = 0;
+		
+		for (BirdBoundary current: birdBoundaries) {
+			int currentAvgDist = 0;
+			int otherBirds = 0;
+			for (BirdBoundary other: birdBoundaries) {
+				currentAvgDist+= getDist(current, other);
+				otherBirds++;
+			}
+			currentAvgDist /= otherBirds;
+			averageAvgDist += currentAvgDist;
+			if (currentAvgDist > highestAvgDist) {
+				isoBird = current;
+				highestAvgDist = currentAvgDist;
+			}
+		}
+		biggestDistToOtherBirds = highestAvgDist;
+		avgDistToOtherBirds = averageAvgDist / birdBoundaries.size();
+		return isoBird;
+	}
+		
+	/**
+	 * Draws a rectangle around the most isolated bird.
+	 * @param iso - The BirdBoundary object corresponding
+	 * to the bird.
+	 * @param c - The colour of the rectangle to draw.
+	 */
+	public Image drawIsoBirdRect(BirdBoundary iso, Color c) {
+		int topLeftX = getCoordinates(iso.getLeftIndex())[0];
+		int topLeftY = getCoordinates(iso.getTopIndex())[1];
+		int width = iso.getRightX() - iso.getLeftX();
+		int height = iso.getBottomY() - iso.getTopY();
+		
+		return ImageEditor.rect(ImageEditor.getLoadedImage(), topLeftX,
+				topLeftY, width, height, c);
+	}
+	
+	public double getDist(BirdBoundary a, BirdBoundary b) {
+		int[] aMid = a.getMidPoint();
+		int[] bMid = b.getMidPoint();
+		
+		return Math.sqrt( Math.pow((bMid[0] - aMid[0]),2) + Math.pow((bMid[1] - aMid[1]),2));
+	}
+	
 	
 	/**
 	 * Finds a particular disjoint set node's coordinates in the image.

@@ -122,6 +122,17 @@ public class BirdBoundary {
 		this.leftX = leftX;
 	}
 	
+	/**
+	 * Gets the midpoint of a bird's boundary box.
+	 * @return A 2D array, where [0] = x, [1] = y.
+	 */
+	public int[] getMidPoint() {
+		int[] coords = new int[2];
+		coords[0] = (int) ( leftX + (0.5 * (rightX-leftX)));
+		coords[1] = (int) (topY + (0.5 * (bottomY-topY)));
+		return coords;
+	}
+	
 }
 		
 	

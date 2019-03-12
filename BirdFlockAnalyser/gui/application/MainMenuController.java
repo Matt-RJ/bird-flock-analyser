@@ -8,9 +8,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -39,6 +41,10 @@ public class MainMenuController {
 	@FXML private Slider minSize;
 	@FXML private Label birdNumberLabel;
 	
+	// Advanced analysis
+	@FXML private Button findIsolatedBird;
+	@FXML private TextArea infoPanel;
+	
 	@FXML
 	/**
 	 * Opens a file browser and loads in a chosen image into the program.
@@ -46,20 +52,25 @@ public class MainMenuController {
 	 * @param event
 	 */
 	public void openImage(ActionEvent event) {
-		// File browser for selecting image
-		FileChooser fc = new FileChooser();
-		fc.setTitle("Open Image");
-		File imageFile = fc.showOpenDialog(new Stage());
-		
-		// Stores and displays the image
-		ImageEditor.setLoadedImageFile(imageFile);
-		ImageEditor.setLoadedImage(new Image(imageFile.toURI().toString()));
-		ImageEditor.setGrayScaleImage(null);
-		toBlackWhite();
-		imagePanel.setImage(ImageEditor.getLoadedImage());
-		
-		// Creates an instance of BirdAnalyser for the loaded image
-		Main.birdAnalyser = new BirdAnalyser(ImageEditor.getBlackWhiteImage());
+		try {
+			// File browser for selecting image
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Open Image");
+			File imageFile = fc.showOpenDialog(new Stage());
+			
+			// Stores and displays the image
+			ImageEditor.setLoadedImageFile(imageFile);
+			ImageEditor.setLoadedImage(new Image(imageFile.toURI().toString()));
+			ImageEditor.setGrayScaleImage(null);
+			toBlackWhite();
+			imagePanel.setImage(ImageEditor.getLoadedImage());
+			
+			// Creates an instance of BirdAnalyser for the loaded image
+			Main.birdAnalyser = new BirdAnalyser(ImageEditor.getBlackWhiteImage());
+		}
+		catch (NullPointerException e) {
+			System.out.println("Image loading cancelled.");
+		}
 	}
 	
 	/**
@@ -80,19 +91,29 @@ public class MainMenuController {
 	 */
 	@FXML
 	public void toBlackWhite(ActionEvent event) {
-		int threshold = (int) blackWhiteThreshold.getValue();
-		Image image = ImageEditor.getLoadedImage();
-		Image blackWhiteImage = ImageEditor.toBlackAndWhite(image, threshold);
-		ImageEditor.setBlackWhiteImage(blackWhiteImage);
-		imagePanel.setImage(blackWhiteImage);
+		try {
+			int threshold = (int) blackWhiteThreshold.getValue();
+			Image image = ImageEditor.getLoadedImage();
+			Image blackWhiteImage = ImageEditor.toBlackAndWhite(image, threshold);
+			ImageEditor.setBlackWhiteImage(blackWhiteImage);
+			imagePanel.setImage(blackWhiteImage);
+		}
+		catch (NullPointerException e) {
+			infoPanel.setText("No image is loaded!");
+		}
 	}
 	
 	public void toBlackWhite() {
-		int threshold = (int) blackWhiteThreshold.getValue();
-		Image image = ImageEditor.getLoadedImage();
-		Image blackWhiteImage = ImageEditor.toBlackAndWhite(image, threshold);
-		ImageEditor.setBlackWhiteImage(blackWhiteImage);
-		imagePanel.setImage(blackWhiteImage);
+		try {
+			int threshold = (int) blackWhiteThreshold.getValue();
+			Image image = ImageEditor.getLoadedImage();
+			Image blackWhiteImage = ImageEditor.toBlackAndWhite(image, threshold);
+			ImageEditor.setBlackWhiteImage(blackWhiteImage);
+			imagePanel.setImage(blackWhiteImage);
+		}
+		catch (NullPointerException e) {
+			System.out.println("Error in toBlackWhite()");
+		}
 	}
 	
 	
@@ -112,16 +133,43 @@ public class MainMenuController {
 	
 	@FXML
 	public void locateBirds(ActionEvent event) {
-		Main.birdAnalyser.setImage(ImageEditor.getBlackWhiteImage());
-		Main.birdAnalyser.instantiateDisjointSetArray((ImageEditor.getBlackWhiteImage()));
-		Main.birdAnalyser.combinePixels(
-				ImageEditor.getBlackWhiteImage(), (int) minSize.getValue());
-		Main.birdAnalyser.createBirdBoundaries(ImageEditor.getBlackWhiteImage());
-		imagePanel.setImage(ImageEditor.drawAllRects(ImageEditor.getLoadedImage(),
-													 Main.birdAnalyser.getBirdBoundaries()));
+		try {
+			Main.birdAnalyser.setImage(ImageEditor.getBlackWhiteImage());
+			Main.birdAnalyser.instantiateDisjointSetArray((ImageEditor.getBlackWhiteImage()));
+			Main.birdAnalyser.combinePixels(
+					ImageEditor.getBlackWhiteImage(), (int) minSize.getValue());
+			birdNumberLabel.setText("Birds found: " + 
+					Main.birdAnalyser.countBirds((int) minSize.getValue()) );
+			Main.birdAnalyser.createBirdBoundaries(ImageEditor.getBlackWhiteImage());
+			imagePanel.setImage(ImageEditor.drawAllRects(ImageEditor.getLoadedImage(),
+														 Main.birdAnalyser.getBirdBoundaries()));
+		}
+		catch (NullPointerException e) {
+			infoPanel.setText("No image is loaded!");
+		}
 		
-		birdNumberLabel.setText("Birds found: " + 
-				Main.birdAnalyser.countBirds((int) minSize.getValue()) );
+		
+	}
+	
+	
+	// ADVANCED ANALYSIS
+	
+	@FXML
+	public void findIsolatedBird(ActionEvent event) {
+		try {
+			Main.birdAnalyser.findMostIsolatedBird();
+			imagePanel.setImage(Main.birdAnalyser.drawIsoBirdRect(
+					Main.birdAnalyser.findMostIsolatedBird(), new Color(1,0,0,1)));
+			String currentInfo = "Highlighted bird average distance to others: " 
+					+ Main.birdAnalyser.getBiggestDistToOtherBirds() + "px";
+			String restInfo = "Average distance across the board: "
+					+ Main.birdAnalyser.getAvgDistToOtherBirds() + "px";
+			infoPanel.setText(currentInfo + "\n" + restInfo);
+		}
+		catch (NullPointerException e) {
+			infoPanel.setText("Use 'count birds' before performing"
+							 + " an advanced analysis.");
+		}
 	}
 	
 	

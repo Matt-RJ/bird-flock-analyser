@@ -7,7 +7,8 @@ import javafx.scene.paint.Color;
 
 /**
  * This class contains the methods which allow the DisjointSet class to
- * interact with the GUI and the rest of the system.
+ * interact with the GUI and the rest of the system for bird counting and
+ * analysis.
  * 
  * @author Mantas Rajackas
  *

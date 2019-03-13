@@ -239,6 +239,6 @@ public abstract class ImageEditor {
 	 * @return True if an image exists, false otherwise.
 	 */
 	public static boolean imageLoaded() {
-		return (loadedImage == null) ? true : false;
+		return loadedImage == null;
 	}
 }

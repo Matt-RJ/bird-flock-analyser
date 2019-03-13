@@ -6,8 +6,11 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-// TODO: Link MainMenu to its controller properly
-
+/**
+ * 
+ * @author Mantas Rajackas
+ *
+ */
 public class Main extends Application {
 	
 	static BirdAnalyser birdAnalyser = new BirdAnalyser(null);

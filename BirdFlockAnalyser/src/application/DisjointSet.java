@@ -1,6 +1,8 @@
 package application;
 
 /**
+ * This class allows for the creation and management of disjoint
+ * set trees.
  * 
  * @author Mantas Rajackas
  *
@@ -160,7 +162,8 @@ public class DisjointSet {
 		int rootP = findRecursive(sets, p);
 		int rootQ = findRecursive(sets, q);
 		
-		if (rootP == rootQ) return; // Does nothing if both nodes are in the same tree.
+		// Does nothing if both nodes are in the same tree.
+		if (rootP == rootQ) return;
 		
 		int pTreeHeight = getHeight(sets, rootP);
 		int qTreeHeight = getHeight(sets, rootQ);
